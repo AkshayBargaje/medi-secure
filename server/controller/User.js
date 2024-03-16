@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import { sendMail } from "../services/MAIL.js";
 import { genrateOTP } from "../services/OTP.js";
 import { genrateToken } from "../utils/token.js";
+import Doctor from "../models/Doctor.js";
 
 /* 
 @Description: Creation of User 
@@ -110,7 +111,7 @@ export const VerifyEmail = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && user.otp === otp) {
-    res.status(200).json({msg:"Email Verified Successfully",user});
+    res.status(200).json({ msg: "Email Verified Successfully", user });
   } else if (!user) {
     res.status(400);
     throw new Error("User not found on these email");
@@ -133,16 +134,16 @@ export const QuerySearch = asyncHandler(async (req, res) => {
   const keyword = req.query.search
     ? {
         $or: [
-          { firstname: { $regex: req.query.search, $options: "i" } },
-          { middlename: { $regex: req.query.search, $options: "i" } },
-          { lastname: { $regex: req.query.search, $options: "i" } },
+          { fullname: { $regex: req.query.search, $options: "i" } },
+          { registrationNo: { $regex: req.query.search, $options: "i" } },
+          { contactNo: { $regex: req.query.search, $options: "i" } },
           { email: { $regex: req.query.search, $options: "i" } },
-          { aadharno: { $regex: req.query.search, $options: "i" } },
+          // { aadharno: { $regex: req.query.search, $options: "i" } },
         ],
       }
     : {};
 
-  const users = await User.find(keyword);
+  const users = await Doctor.find(keyword);
 
   if (users) res.status(200).json(users);
   else {
@@ -179,7 +180,7 @@ export const medicalDetails = asyncHandler(async (req, res) => {
     operationDetails,
     medicalReports,
     specialCare,
-    date
+    date,
   } = req.body;
 
   const userExists = await User.findOne({ _id: id });

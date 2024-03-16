@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { docqualification } from "../../api/list";
-import { Image } from 'cloudinary-react';
+import { Image } from "cloudinary-react";
 import Spinner from "../../utils/Spinner";
 import {
   loadBlockchainDataDoc,
@@ -10,16 +10,16 @@ import {
 } from "../../webblock/Web3DocHelpers";
 import { loadBlockchainData, loadWeb3 } from "../../webblock/Web3helpers";
 
-import { CloudinaryContext } from 'cloudinary-react';
+import { CloudinaryContext } from "cloudinary-react";
 
-const cloudName = 'dy8qawb3n';
-const apiKey = '578982174463645';
-const apiSecret = 'IiE0XIIlE3TowD6-OhowLGFsZyA';
+const cloudName = "dtdjwrznt";
+const apiKey = "726333324749618";
+const apiSecret = "kfj3M4gqATfE-H7VqY-mZ9dJjKc";
 
 const cloudinaryConfig = {
   cloud_name: cloudName,
   api_key: apiKey,
-  api_secret: apiSecret
+  api_secret: apiSecret,
 };
 
 const CloudinarySetup = ({ children }) => (
@@ -28,17 +28,16 @@ const CloudinarySetup = ({ children }) => (
   </CloudinaryContext>
 );
 
-
-const DocRegister = ({setStep}) => {
+const DocRegister = ({ setStep }) => {
   const [auth, setAuth] = useState();
   const [accounts, setAccounts] = useState();
 
   const loadAccounts = async () => {
     let { auth, accounts } = await loadBlockchainDataDoc();
-    console.log(auth)
+    console.log(auth);
     setAccounts(accounts);
     setAuth(auth);
-    console.log(accounts)
+    console.log(accounts);
   };
 
   useEffect(() => {
@@ -111,7 +110,7 @@ const DocRegister = ({setStep}) => {
         return;
     }
     setDoctor({ ...doctor, [name]: value, errors: error });
-    console.log(doctor)
+    console.log(doctor);
   };
 
   const handleEmpty = (obj) => {
@@ -139,27 +138,27 @@ const DocRegister = ({setStep}) => {
     const file = event.target.files[0];
 
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'blockchain');
+    formData.append("file", file);
+    formData.append("upload_preset", "blockchain");
 
     try {
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
         {
-          method: 'POST',
-          body: formData
+          method: "POST",
+          body: formData,
         }
       );
 
       if (!response.ok) {
-        throw new Error('Image upload failed.');
+        throw new Error("Image upload failed.");
       }
 
       const data = await response.json();
       setCerr(data.secure_url);
       setLoading(false);
     } catch (error) {
-      console.error('Image upload error:', error);
+      console.error("Image upload error:", error);
     }
   };
 
@@ -225,21 +224,26 @@ const DocRegister = ({setStep}) => {
       });
     } else {
       let fullname =
-        "Dr. "+doctor.firstname + " " + doctor.middlename + " " + doctor.lastname;
-      
+        "Dr. " +
+        doctor.firstname +
+        " " +
+        doctor.middlename +
+        " " +
+        doctor.lastname;
+
       const postData = {
         fullname,
         qualification,
-        registrationNo:doctor.registrationNo,
-        contactNo:doctor.contactNo,
-        email:doctor.email,
-        certificate:cerr,
-        accountHash:accounts
-      }
+        registrationNo: doctor.registrationNo,
+        contactNo: doctor.contactNo,
+        email: doctor.email,
+        certificate: cerr,
+        accountHash: accounts,
+      };
 
-      const data = await axios.post("http://localhost:6969/doctor",postData);
+      const data = await axios.post("http://localhost:6969/doctor", postData);
 
-      window.localStorage.setItem("Doctor",JSON.stringify(data.data));
+      window.localStorage.setItem("Doctor", JSON.stringify(data.data));
 
       await auth.methods
         .createDoctor(
@@ -256,7 +260,10 @@ const DocRegister = ({setStep}) => {
   const renderNav = () => (
     <div className="p-2 text-2xl font-bold border-b-2 border-zinc-400 uppercase flex items-center justify-between">
       <h1 className="text-gray-500">Register as Verified Doctor</h1>
-      <button className="p-2 text-xl w-1/5 text-white bg-[#0a1172] rounded-lg" onClick={() => setStep(9)}>
+      <button
+        className="p-2 text-xl w-1/5 text-white bg-[#0a1172] rounded-lg"
+        onClick={() => setStep(9)}
+      >
         Sign In
       </button>
     </div>
@@ -374,8 +381,8 @@ const DocRegister = ({setStep}) => {
         </label>
         <br />
         <CloudinarySetup>
-        <input type="file" onChange={handleImageUpload} />
-        {cerr && <Image cloudName={cloudName} publicId={cerr} />}
+          <input type="file" onChange={handleImageUpload} />
+          {cerr && <Image cloudName={cloudName} publicId={cerr} />}
         </CloudinarySetup>
         {/* <input
           type={"file"}

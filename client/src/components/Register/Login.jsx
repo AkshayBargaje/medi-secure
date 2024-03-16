@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import login from "../../utils/images/login.svg";
 
-const Login = ({setStep}) => {
+const Login = ({ setStep }) => {
   const [isOTP, setIsOTP] = useState(false);
   const [email, setEmail] = useState("");
   const [otp, setOTP] = useState("");
@@ -45,7 +45,7 @@ const Login = ({setStep}) => {
           icon: "success",
         });
         setStep(1);
-        window.localStorage.setItem("Profile",JSON.stringify(data.data.user));
+        window.localStorage.setItem("Profile", JSON.stringify(data.data.user));
         window.location.reload(0);
       }
     } catch (error) {

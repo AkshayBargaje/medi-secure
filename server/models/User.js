@@ -50,12 +50,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  otp:{
-    type:String
+  otp: {
+    type: String,
   },
-  MedicalDetails:{
-    type:Array
-  }
+  MedicalDetails: {
+    type: Array,
+  },
 });
 
 export default new mongoose.model("UserSchema", UserSchema);

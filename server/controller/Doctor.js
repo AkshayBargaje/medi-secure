@@ -49,7 +49,7 @@ export const createDoctor = asyncHandler(async (req, res) => {
       accountHash,
       registrationNo,
       docEvents: [],
-    token: genrateToken(doctor._id),
+      token: genrateToken(doctor._id),
     });
   } else {
     res.status(400);
@@ -76,7 +76,7 @@ export const updateDoctor = asyncHandler(async (req, res) => {
     registrationNo,
     contactNo,
     accountHash,
-    docEvents
+    docEvents,
   } = req.body;
 
   Doctor.findOne({ email }, (err, doc) => {
@@ -127,7 +127,9 @@ export const loginDoctor = asyncHandler(async (req, res) => {
       doctorExist
         .save()
         .then(() => {
-          res.status(200).json({msg:"OTP is successfully send on email",email});
+          res
+            .status(200)
+            .json({ msg: "OTP is successfully send on email", email });
         })
         .catch((error) => {
           res.status(400).json("Server-side error");
@@ -143,21 +145,21 @@ export const loginDoctor = asyncHandler(async (req, res) => {
 });
 
 export const VerifyLogin = asyncHandler(async (req, res) => {
-  const { email,otp } = req.body;
+  const { email, otp } = req.body;
 
   if (!email || !otp) {
     res.status(400);
     throw new Error("Data not recieved");
   }
 
-  const doctor = await Doctor.findOne({email});
+  const doctor = await Doctor.findOne({ email });
 
-  if(doctor && doctor.otp === otp){
-    res.status(200).json({msg:"Email is verified successfully",doctor});
-  }else if(!doctor){
+  if (doctor && doctor.otp === otp) {
+    res.status(200).json({ msg: "Email is verified successfully", doctor });
+  } else if (!doctor) {
     res.status(400);
     throw new Error("No doctor ID available on these email");
-  }else{
+  } else {
     res.status(400);
     throw new Error("Invalid OTP entered");
   }
@@ -165,15 +167,13 @@ export const VerifyLogin = asyncHandler(async (req, res) => {
 
 export const docEventDetails = asyncHandler(async (req, res) => {
   let id = req.params.id;
-  console.log(id)
+  console.log(id);
   if (!req.body) {
     res.status(400);
     throw new Error("Query Data is not reached");
   }
 
-  const {
-    eventsArray
-  } = req.body;
+  const { eventsArray } = req.body;
 
   const docExists = await Doctor.findOne({ _id: id });
 
@@ -207,4 +207,3 @@ export const docEventDetails = asyncHandler(async (req, res) => {
 //     throw new Error("Server side error");
 //   }
 // });
-

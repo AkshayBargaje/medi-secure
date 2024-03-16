@@ -4,22 +4,21 @@ import { cities, countries, relation, states } from "../../../api/list";
 import { BiReset, BiSave } from "react-icons/bi";
 import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
 import { useState } from "react";
-import { Image } from 'cloudinary-react';
+import { Image } from "cloudinary-react";
 import Spinner from "../../../utils/Spinner";
 import Swal from "sweetalert2";
 import { loadBlockchainData, loadWeb3 } from "../../../webblock/Web3helpers";
 
+import { CloudinaryContext } from "cloudinary-react";
 
-import { CloudinaryContext } from 'cloudinary-react';
-
-const cloudName = 'dy8qawb3n';
-const apiKey = '578982174463645';
-const apiSecret = 'IiE0XIIlE3TowD6-OhowLGFsZyA';
+const cloudName = "dtdjwrznt";
+const apiKey = "726333324749618";
+const apiSecret = "kfj3M4gqATfE-H7VqY-mZ9dJjKc";
 
 const cloudinaryConfig = {
   cloud_name: cloudName,
   api_key: apiKey,
-  api_secret: apiSecret
+  api_secret: apiSecret,
 };
 
 const CloudinarySetup = ({ children }) => (
@@ -27,7 +26,6 @@ const CloudinarySetup = ({ children }) => (
     {children}
   </CloudinaryContext>
 );
-
 
 const Form = () => {
   const [auth, setAuth] = useState();
@@ -128,27 +126,29 @@ const Form = () => {
     const file = event.target.files[0];
 
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'blockchain');
+    formData.append("file", file);
+    formData.append("upload_preset", "blockchain");
 
     try {
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
         {
-          method: 'POST',
-          body: formData
+          method: "POST",
+          body: formData,
         }
       );
 
+      console.log(response);
+
       if (!response.ok) {
-        throw new Error('Image upload failed.');
+        throw new Error("Image upload failed.");
       }
 
       const data = await response.json();
       setFile(data.secure_url);
       setLoading(false);
     } catch (error) {
-      console.error('Image upload error:', error);
+      console.error("Image upload error:", error);
     }
   };
 
@@ -167,10 +167,10 @@ const Form = () => {
 
     if (post.type === "image/jpeg" || post.type === "image/png") {
       const data = new FormData();
-      data.append("upload_preset", "hello");
+      data.append("upload_preset", "blockchain");
       data.append("file", post);
-      data.append("cloud_name", "dgrxzxtd8");
-      fetch("https://api.cloudinary.com/v1_1/dgrxzxtd8/image/upload", {
+      data.append("cloud_name", "dtdjwrznt");
+      fetch("https://api.cloudinary.com/v1_1/dtdjwrznt/image/upload", {
         method: "POST",
         body: data,
       })
@@ -324,15 +324,13 @@ const Form = () => {
         icon: "error",
       });
       setLoading(false);
-    } 
-    else if(!isSelected){
+    } else if (!isSelected) {
       Swal.fire({
         title: "Not Accepted",
         text: "Please accept the filled data",
         icon: "error",
       });
-    }
-    else {
+    } else {
       let fullname =
         user.firstname + " " + user.middlename + " " + user.lastname;
       try {
@@ -364,19 +362,36 @@ const Form = () => {
 
         const data = await axios.post("http://localhost:6969/user", postData);
 
-        window.localStorage.setItem("Profile",JSON.stringify(data.data));
+        window.localStorage.setItem("Profile", JSON.stringify(data.data));
 
-        await auth.methods
-          .createUser(
-            fullname,
-            user.aadharno,
-            user.email,
-            user.contactno,
-            user.gender,
-            user.dateofbirth,
-            user.address
-          )
-          .send({ from: accounts });
+        // await auth.methods
+        //   .createUser(
+        //     fullname,
+        //     user.aadharno,
+        //     user.email,
+        //     user.contactno,
+        //     user.gender,
+        //     user.dateofbirth,
+        //     user.address
+        //   )
+        //   .send({ from: accounts });
+
+        setUser({
+          firstname: "",
+          middlename: "",
+          lastname: "",
+          aadharno: "",
+          contactno: "",
+          gender: "",
+          dateofbirth: "",
+          email: "",
+          country: "India",
+          state: "",
+          city: "",
+          houseno: "",
+          pincode: "",
+          address: "",
+        });
       } catch (err) {
         Swal.fire({
           ttile: "Error",
@@ -714,10 +729,10 @@ const Form = () => {
           <div className="w-full">
             <label>User Profile Image {Required()}</label>
             <div>
-            <CloudinarySetup>
-            <input type="file" onChange={handleImageUpload} />
-            {file && <Image cloudName={cloudName} publicId={file} />}
-            </CloudinarySetup>
+              <CloudinarySetup>
+                <input type="file" onChange={handleImageUpload} />
+                {file && <Image cloudName={cloudName} publicId={file} />}
+              </CloudinarySetup>
               {/* <input
                 type={"file"}
                 className="p-2 border focus:outline-none w-full"
@@ -730,7 +745,9 @@ const Form = () => {
           <input
             type={"checkbox"}
             className="mr-2"
-            onChange={() => {setIsSelected(!isSelected)}}
+            onChange={() => {
+              setIsSelected(!isSelected);
+            }}
           />
           <span
             className={`capitalize ${
